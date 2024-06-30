@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 def calculate_combustion_parameters(Flame_Thermal_Output, XH2):
      XCO = 1 - XH2
      
-    CO2 = (1286.864286 - 19.936 * Flame_Thermal_Output - 2434.657 * XH2 + 322.986 * (XH2 ** 2))
     
     Total_Boundary_Heat_Flux = (2228.473786 
                                 + 1.0948285385919965e-09 * (Flame_Thermal_Output ** 4)
