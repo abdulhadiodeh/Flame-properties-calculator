@@ -34,20 +34,31 @@ def calculate_values(XH2, Power):
     return CO2, Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux
 
 def display_comparison_chart(data):
-    df = pd.DataFrame(data, columns=['Case', 'CO2', 'Boundary Heat Flux', 'Heat Release', 'NOx', 'Flame Surface Area', 'Radiation Heat Flux'])
+    parameters = ['CO2 (kg/m^3)', 'Boundary Heat Flux (W/m^2)', 'Heat Release (W)', 'NOx (kg/m^3)', 'Flame Surface Area (m^2)', 'Radiation Heat Flux (W/m^2)']
+    df = pd.DataFrame(data, columns=['Case'] + parameters)
     df.set_index('Case', inplace=True)
     
-    fig, ax = plt.subplots(figsize=(10, 6))
-    df.plot(kind='bar', ax=ax)
-    plt.title('Combustion Parameters Comparison')
-    plt.xlabel('Case')
-    plt.ylabel('Values')
-    plt.xticks(rotation=0)
+    fig, axs = plt.subplots(3, 2, figsize=(15, 15))
+    axs = axs.flatten()
+    
+    for ax, param in zip(axs, parameters):
+        df[param].plot(kind='bar', ax=ax)
+        ax.set_title(f'Comparison of {param}')
+        ax.set_xlabel('Case')
+        ax.set_ylabel(param)
+        ax.grid(True, linestyle='--', linewidth=0.5)
+        ax.legend(loc='upper center')
+        ax.set_xticklabels(df.index, rotation=0)
+    
+    plt.tight_layout()
     st.pyplot(fig)
 
 st.title('Combustion Parameter Calculator')
 
-st.write("Stoichiometry: Constant with 25% excess air")
+st.write("This is a calculator based on Sandia chnA burner for turbulent diffusion ideal gas (H2/CO) lean mixture flames with constant stoichiometry (25% excess air).")
+
+# Add an image to the app
+st.image('burner.jpg', caption='Sandia chnA Burner')
 
 data = []
 for i in range(1, 4):
@@ -58,12 +69,12 @@ for i in range(1, 4):
     if st.button(f'Calculate Case {i}', key=f'button_{i}'):
         results = calculate_values(XH2, Power)
         data.append([f'Case {i}', *results])
-        st.write(f"CO2: {results[0]:.2f}")
-        st.write(f"Boundary Heat Flux: {results[1]:.2f}")
-        st.write(f"Heat Release: {results[2]:.2f}")
-        st.write(f"NOx: {results[3]:.2f}")
-        st.write(f"Flame Surface Area: {results[4]:.6f}")
-        st.write(f"Radiation Heat Flux: {results[5]:.2f}")
+        st.write(f"CO2: {results[0]:.2f} kg/m^3")
+        st.write(f"Boundary Heat Flux: {results[1]:.2f} W/m^2")
+        st.write(f"Heat Release: {results[2]:.2f} W")
+        st.write(f"NOx: {results[3]:.2f} kg/m^3")
+        st.write(f"Flame Surface Area: {results[4]:.6f} m^2")
+        st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m^2")
 
 if len(data) > 0:
     display_comparison_chart(data)
