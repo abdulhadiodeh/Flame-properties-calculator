@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 # Function to calculate values based on provided equations
 def calculate_combustion_parameters(Flame_Thermal_Output, XH2):
      XCO = 1 - XH2
-    CO2 = 1286.864286 - 19.936 * Flame_Thermal_Output - 2434.657 * XH2 + 322.986 * (XH2 ** 2)
+     
+    CO2 = (1286.864286 - 19.936 * Flame_Thermal_Output - 2434.657 * XH2 + 322.986 * (XH2 ** 2))
+    
     Total_Boundary_Heat_Flux = (2228.473786 
                                 + 1.0948285385919965e-09 * (Flame_Thermal_Output ** 4)
                                 + 0.002598920294605942 * (Flame_Thermal_Output ** 3)
@@ -18,19 +20,21 @@ def calculate_combustion_parameters(Flame_Thermal_Output, XH2):
                     - 5.484696052882043e-08 * (Flame_Thermal_Output ** 2)
                     + 939.5081967213116 * XCO
                     + 3154.098360655737 * (XCO ** 2))
+                    
     NOx = (157.885714 
            + 2.3599999999986045 * Flame_Thermal_Output 
            - 284.3428571428405 * XH2 
            + 12.30769230769231 * (Flame_Thermal_Output * XH2))
+           
     Flame_Surface_Area = (0.00168 
                           - 2.3160000000030116e-05 * Flame_Thermal_Output 
                           + 0.003953142857 * XH2 
                           - 0.003953142857 * (XH2 ** 2))
+                          
     Radiation_Heat_Flux = (1042.857143 
                            + 30.599999999995454 * Flame_Thermal_Output 
                            - 2411.428571428527 * XH2 
-                           + 322.9857142857029 * (XH2 ** 2))
-    )
+                           + 322.9857142857029 * (XH2 ** 2)))
     
     Flame_Temperature = 2160.0 + 152.0 * XH2
     
