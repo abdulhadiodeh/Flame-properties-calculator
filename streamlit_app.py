@@ -38,8 +38,8 @@ def calculate_values(XH2, Power):
     return CO2, Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux, XCO
 
 def display_comparison_charts(data):
-    parameters = ['CO2 (kg/m�)', 'Boundary Heat Flux (W/m�)', 'Heat Release (W)', 'NO? (kg/m�)', 'Flame Surface Area (m�)', 'Radiation Heat Flux (W/m�)']
-    df = pd.DataFrame(data, columns=['Case'] + parameters + ['XCO', 'XH2'])
+    parameters = ['CO₂ (kg/m³)', 'Boundary Heat Flux (W/m²)', 'Heat Release (W)', 'NOₓ (kg/m³)', 'Flame Surface Area (m²)', 'Radiation Heat Flux (W/m²)']
+    df = pd.DataFrame(data, columns=['Case'] + parameters + ['XCO', 'XH₂'])
     df.set_index('Case', inplace=True)
 
     colors = ['blue', 'orange', 'green', 'red']
@@ -54,30 +54,30 @@ def display_comparison_charts(data):
         ax1.grid(True, linestyle='--', linewidth=0.5)
         ax1.legend([param], loc='upper center')
 
-        if param == 'Heat Release (W)' or param == 'CO2 (kg/m�)':
+        if param == 'Heat Release (W)' or param == 'CO₂ (kg/m³)':
             ax2 = ax1.twinx()
             df['XCO'].plot(ax=ax2, color='red', marker='o', linestyle='dashed')
             ax2.set_ylabel('XCO')
             ax2.legend(['XCO'], loc='upper right')
 
-        if param == 'NO? (kg/m�)':
+        if param == 'NOₓ (kg/m³)':
             ax2 = ax1.twinx()
-            df['XH2'].plot(ax=ax2, color='purple', marker='o', linestyle='dashed')
-            ax2.set_ylabel('XH2')
-            ax2.legend(['XH2'], loc='upper right')
+            df['XH₂'].plot(ax=ax2, color='purple', marker='o', linestyle='dashed')
+            ax2.set_ylabel('XH₂')
+            ax2.legend(['XH₂'], loc='upper right')
 
         plt.xticks(rotation=45)
         plt.tight_layout()
         st.pyplot(fig)
 
 def display_results_table(data):
-    df = pd.DataFrame(data, columns=['Case', 'CO2 (kg/m�)', 'Boundary Heat Flux (W/m�)', 'Heat Release (W)', 'NO? (kg/m�)', 'Flame Surface Area (m�)', 'Radiation Heat Flux (W/m�)', 'XCO', 'XH2'])
+    df = pd.DataFrame(data, columns=['Case', 'CO₂ (kg/m³)', 'Boundary Heat Flux (W/m²)', 'Heat Release (W)', 'NOₓ (kg/m³)', 'Flame Surface Area (m²)', 'Radiation Heat Flux (W/m²)', 'XCO', 'XH₂'])
     df.set_index('Case', inplace=True)
     st.table(df)
 
 st.title('Combustion Parameter Calculator')
 
-st.write("This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H2/CO) lean mixture flames with constant stoichiometry (25% excess air), the equations are based on machine learning optimisation and well established CFD numerical models. For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com")
+st.write("This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H₂/CO) lean mixture flames with constant stoichiometry (25% excess air), the equations are based on machine learning optimisation and well established CFD numerical models. For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com")
 
 # Center the image
 col1, col2, col3 = st.columns([1, 3, 1])
@@ -93,18 +93,18 @@ set_cambria_font()
 data = []
 for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
     st.header(f'{case_label}')
-    XH2 = st.number_input(f'Enter H2 volume percentage (XH2) for {case_label} (0.25 to 1):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
+    XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH₂_{i}')
     Power = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=1, key=f'Power_{i}')
     
     if st.button(f'Calculate {case_label}', key=f'button_{i}'):
         results = calculate_values(XH2, Power)
         data.append([case_label, *results])
-        st.write(f"CO2: {results[0]:.2f} kg/m�")
-        st.write(f"Boundary Heat Flux: {results[1]:.2f} W/m�")
+        st.write(f"CO₂: {results[0]:.2f} kg/m³")
+        st.write(f"Boundary Heat Flux: {results[1]:.2f} W/m²")
         st.write(f"Heat Release: {results[2]:.2f} W")
-        st.write(f"NO?: {results[3]:.2f} kg/m�")
-        st.write(f"Flame Surface Area: {results[4]:.6f} m�")
-        st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m�")
+        st.write(f"NOₓ: {results[3]:.2f} kg/m³")
+        st.write(f"Flame Surface Area: {results[4]:.6f} m²")
+        st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m²")
         st.write(f"XCO: {results[6]:.2f}")
 
 if len(data) > 0:
