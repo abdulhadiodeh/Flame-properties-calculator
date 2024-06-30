@@ -33,7 +33,87 @@ def plot_nox(data):
     
     return fig
 
-# Repeat similar functions for the other plots...
+def plot_co2(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['CO2'], color='orange', label='CO₂ (kg/m³)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('CO₂ (kg/m³)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XCO'], color='black', marker='o', linestyle='--', label='XCO')
+    ax2.set_ylabel('XCO')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
+
+def plot_flame_surface_area(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Flame_Surface_Area'], color='blue', label='Flame Surface Area (m²)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Flame Surface Area (m²)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH₂')
+    ax2.set_ylabel('XH₂')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
+
+def plot_heat_release(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Heat_Release'], color='purple', label='Heat Release (W)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Heat Release (W)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['Flame_Thermal_Output'], color='black', marker='o', linestyle='--', label='Flame Thermal Output (kW)')
+    ax2.set_ylabel('Flame Thermal Output (kW)')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
+
+def plot_heat_flux(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Total_Boundary_Heat_Flux'], color='darkgrey', label='Total Boundary Heat Flux (W/m²)')
+    ax1.bar(data['Case'], data['Radiation_Heat_Flux'], color='lightcoral', label='Radiation Heat Flux (W/m²)', bottom=data['Total_Boundary_Heat_Flux'])
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Heat Flux (W/m²)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
+
+def plot_temperature(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Flame_Temperature'], color='red', edgecolor='black', label='Flame Temperature (K)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Flame Temperature (K)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH₂')
+    ax2.set_ylabel('XH₂')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
 
 # Streamlit app layout
 st.title('Combustion Parameter Calculator')
@@ -71,7 +151,7 @@ with col1:
     for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
         st.header(case_label)
         XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
-        Flame_Thermal_Output = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Flame_Thermal_Output_{i}')
+        Flame_Thermal_Output = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15.0, max_value=25.0, step=0.1, key=f'Flame_Thermal_Output_{i}')
         
         if st.button(f'Calculate {case_label}', key=f'button_{i}'):
             results = calculate_values(XH2, Flame_Thermal_Output)
@@ -96,5 +176,3 @@ with col2:
         st.pyplot(plot_heat_release(df))
         st.pyplot(plot_heat_flux(df))
         st.pyplot(plot_temperature(df))
-
-    
