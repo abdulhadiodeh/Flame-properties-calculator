@@ -19,7 +19,6 @@ def calculate_values(XH2, Flame_Thermal_Output):
 def plot_nox(data):
     fig, ax1 = plt.subplots()
     ax1.bar(data['Case'], data['NOx'], color='red', label='NOx (kg/m³)')
-    ax1.set_xlabel('Flame Conditions')
     ax1.set_ylabel('NOx (kg/m³)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -36,7 +35,6 @@ def plot_nox(data):
 def plot_co2(data):
     fig, ax1 = plt.subplots()
     ax1.bar(data['Case'], data['CO2'], color='orange', label='CO₂ (kg/m³)')
-    ax1.set_xlabel('Flame Conditions')
     ax1.set_ylabel('CO₂ (kg/m³)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -53,7 +51,6 @@ def plot_co2(data):
 def plot_flame_surface_area(data):
     fig, ax1 = plt.subplots()
     ax1.bar(data['Case'], data['Flame_Surface_Area'], color='blue', label='Flame Surface Area (m²)')
-    ax1.set_xlabel('Flame Conditions')
     ax1.set_ylabel('Flame Surface Area (m²)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -70,7 +67,6 @@ def plot_flame_surface_area(data):
 def plot_heat_release(data):
     fig, ax1 = plt.subplots()
     ax1.bar(data['Case'], data['Heat_Release'], color='purple', label='Heat Release (W)')
-    ax1.set_xlabel('Flame Conditions')
     ax1.set_ylabel('Heat Release (W)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -88,7 +84,6 @@ def plot_heat_flux(data):
     fig, ax1 = plt.subplots()
     ax1.bar(data['Case'], data['Total_Boundary_Heat_Flux'], color='darkgrey', label='Total Boundary Heat Flux (W/m²)')
     ax1.bar(data['Case'], data['Radiation_Heat_Flux'], color='lightcoral', label='Radiation Heat Flux (W/m²)', bottom=data['Total_Boundary_Heat_Flux'])
-    ax1.set_xlabel('Flame Conditions')
     ax1.set_ylabel('Heat Flux (W/m²)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -101,7 +96,6 @@ def plot_heat_flux(data):
 def plot_temperature(data):
     fig, ax1 = plt.subplots()
     ax1.bar(data['Case'], data['Flame_Temperature'], color='red', edgecolor='black', label='Flame Temperature (K)')
-    ax1.set_xlabel('Flame Conditions')
     ax1.set_ylabel('Flame Temperature (K)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -164,15 +158,24 @@ with col1:
             st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m²")
             st.write(f"Flame Temperature: {results[7]:.2f} K")
 
-with col2:
-    if data:
-        df = pd.DataFrame(data, columns=['Case', 'CO2', 'Total_Boundary_Heat_Flux', 'Heat_Release', 'NOx', 'Flame_Surface_Area', 'Radiation_Heat_Flux', 'XCO', 'Flame_Temperature', 'Flame_Thermal_Output', 'XH2'])
+if data:
+    df = pd.DataFrame(data, columns=['Case', 'CO2', 'Total_Boundary_Heat_Flux', 'Heat_Release', 'NOx', 'Flame_Surface_Area', 'Radiation_Heat_Flux', 'XCO', 'Flame_Temperature', 'Flame_Thermal_Output', 'XH2'])
 
-        st.subheader('Comparison Charts')
+    st.subheader('Comparison Charts')
 
-        st.pyplot(plot_nox(df))
-        st.pyplot(plot_co2(df))
-        st.pyplot(plot_flame_surface_area(df))
-        st.pyplot(plot_heat_release(df))
-        st.pyplot(plot_heat_flux(df))
-        st.pyplot(plot_temperature(df))
+    st.pyplot(plot_nox(df))
+    st.markdown("---")  # Horizontal line
+
+    st.pyplot(plot_co2(df))
+    st.markdown("---")  # Horizontal line
+
+    st.pyplot(plot_flame_surface_area(df))
+    st.markdown("---")  # Horizontal line
+
+    st.pyplot(plot_heat_release(df))
+    st.markdown("---")  # Horizontal line
+
+    st.pyplot(plot_heat_flux(df))
+    st.markdown("---")  # Horizontal line
+
+    st.pyplot(plot_temperature(df))
