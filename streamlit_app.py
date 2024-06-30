@@ -157,7 +157,7 @@ with col2:
 with col3:
     st.write("")
 
-et_cambria_font()
+set_cambria_font()
 
 data = []
 col1, col2 = st.columns([1, 2])
