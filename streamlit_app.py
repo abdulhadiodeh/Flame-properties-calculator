@@ -1,4 +1,4 @@
-import streamlit as st
+iimport streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -53,7 +53,7 @@ data = []
 for i in range(1, 4):
     st.header(f'Case {i}')
     XH2 = st.number_input(f'Enter XH2 for Case {i} (0.25 to 1):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
-    Power = st.number_input(f'Enter Power for Case {i} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Power_{i}')
+    Power = st.number_input(f'Enter Power for Case {i} (15 to 25):', min_value=15, max_value=25, step=1, key=f'Power_{i}')
     
     if st.button(f'Calculate Case {i}', key=f'button_{i}'):
         results = calculate_values(XH2, Power)
