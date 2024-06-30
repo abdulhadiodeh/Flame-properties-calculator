@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Custom function to set Cambria Math font
 def set_cambria_font():
     plt.rcParams['font.family'] = 'serif'
     plt.rcParams['font.serif'] = 'Cambria Math'
@@ -55,7 +54,13 @@ def display_comparison_charts(data):
         ax1.grid(True, linestyle='--', linewidth=0.5)
         ax1.legend([param], loc='upper center')
 
-        if param in ['Heat Release (W)', 'CO2 (kg/m^3)']:
+        if param == 'Heat Release (W)':
+            ax2 = ax1.twinx()
+            df['XCO'].plot(ax=ax2, color='red', marker='o', linestyle='dashed')
+            ax2.set_ylabel('XCO')
+            ax2.legend(['XCO'], loc='upper right')
+
+        if param == 'CO2 (kg/m^3)':
             ax2 = ax1.twinx()
             df['XCO'].plot(ax=ax2, color='red', marker='o', linestyle='dashed')
             ax2.set_ylabel('XCO')
