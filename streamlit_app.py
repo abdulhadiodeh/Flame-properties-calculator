@@ -39,6 +39,7 @@ def calculate_values(XH2, Power):
 
 def display_comparison_charts(data):
     parameters = ['CO₂ (kg/m³)', 'Boundary Heat Flux (W/m²)', 'Heat Release (W)', 'NOₓ (kg/m³)', 'Flame Surface Area (m²)', 'Radiation Heat Flux (W/m²)']
+    st.write("Debug - Data:", data)  # Debugging line
     df = pd.DataFrame(data, columns=['Case'] + parameters + ['XCO', 'XH₂'])
     df.set_index('Case', inplace=True)
 
@@ -110,3 +111,4 @@ for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Fla
 if len(data) > 0:
     display_comparison_charts(data)
     display_results_table(data)
+
