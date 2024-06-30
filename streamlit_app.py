@@ -165,4 +165,30 @@ col1, col2 = st.columns([1, 2])
 with col1:
     for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
         st.header(f'{case_label}')
-        XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):
+                XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
+        Power = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Power_{i}')
+        
+        if st.button(f'Calculate {case_label}', key=f'button_{i}'):
+            results = calculate_values(XH2, Power)
+            data.append([case_label, *results, Power, XH2])
+            st.write(f"CO₂: {results[0]:.2f} kg/m³")
+            st.write(f"Total Boundary Heat Flux: {results[1]:.2f} W/m²")
+            st.write(f"Heat Release: {results[2]:.2f} W")
+            st.write(f"NOₓ: {results[3]:.2f} kg/m³")
+            st.write(f"Flame Surface Area: {results[4]:.6f} m²")
+            st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m²")
+            st.write(f"Flame Temperature: {results[7]:.2f} K")
+
+with col2:
+    if data:
+        df = pd.DataFrame(data, columns=['Case', 'CO2', 'Total_Boundary_Heat_Flux', 'Heat_Release', 'NOx', 'Flame_Surface_Area', 'Radiation_Heat_Flux', 'XCO', 'Flame_Temperature', 'Power', 'XH2'])
+
+        st.subheader('Comparison Charts')
+
+        st.pyplot(plot_nox(df))
+        st.pyplot(plot_co2(df))
+        st.pyplot(plot_flame_surface_area(df))
+        st.pyplot(plot_heat_release(df))
+        st.pyplot(plot_heat_flux(df))
+        st.pyplot(plot_temperature(df))
+
