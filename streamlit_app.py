@@ -157,18 +157,16 @@ with col2:
 with col3:
     st.write("")
 
-set_cambria_font()
+et_cambria_font()
 
 data = []
 col1, col2 = st.columns([1, 2])
-
-
 
 with col1:
     for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
         st.header(case_label)
         XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
-        Flame_Thermal_Output = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Flame Thermal Output (kW)_{i}')
+        Flame_Thermal_Output = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Flame_Thermal_Output_{i}')
         
         if st.button(f'Calculate {case_label}', key=f'button_{i}'):
             results = calculate_values(XH2, Flame_Thermal_Output)
