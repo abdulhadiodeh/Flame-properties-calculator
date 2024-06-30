@@ -34,10 +34,10 @@ def calculate_values(XH2, Flame_Thermal_Output):
     
     return CO2, Total_Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux, XCO, Flame_Temperature
 
-# Plot functions
+# Plot functions with updated styles
 def plot_nox(data):
-    fig, ax1 = plt.subplots()
-    ax1.bar(data['Case'], data['NOx'], color='red', label='NOx (kg/m³)', width=0.4)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
+    ax1.bar(data['Case'], data['NOx'], color='red', edgecolor='blue', label='NOx (kg/m³)', width=0.35)
     ax1.set_ylabel('NOx (kg/m³)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -52,8 +52,8 @@ def plot_nox(data):
     return fig
 
 def plot_co2(data):
-    fig, ax1 = plt.subplots()
-    ax1.bar(data['Case'], data['CO2'], color='orange', label='CO₂ (kg/m³)', width=0.4)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
+    ax1.bar(data['Case'], data['CO2'], color='orange', edgecolor='blue', label='CO₂ (kg/m³)', width=0.35)
     ax1.set_ylabel('CO₂ (kg/m³)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -68,8 +68,8 @@ def plot_co2(data):
     return fig
 
 def plot_flame_surface_area(data):
-    fig, ax1 = plt.subplots()
-    ax1.bar(data['Case'], data['Flame_Surface_Area'], color='blue', label='Flame Surface Area (m²)', width=0.4)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
+    ax1.bar(data['Case'], data['Flame_Surface_Area'], color='blue', edgecolor='blue', label='Flame Surface Area (m²)', width=0.35)
     ax1.set_ylabel('Flame Surface Area (m²)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -84,8 +84,8 @@ def plot_flame_surface_area(data):
     return fig
 
 def plot_heat_release(data):
-    fig, ax1 = plt.subplots()
-    ax1.bar(data['Case'], data['Heat_Release'], color='purple', label='Heat Release (W)', width=0.4)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
+    ax1.bar(data['Case'], data['Heat_Release'], color='purple', edgecolor='blue', label='Heat Release (W)', width=0.35)
     ax1.set_ylabel('Heat Release (W)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -100,9 +100,9 @@ def plot_heat_release(data):
     return fig
 
 def plot_heat_flux(data):
-    fig, ax1 = plt.subplots()
-    ax1.bar(data['Case'], data['Radiation_Heat_Flux'], color='lightcoral', label='Radiation Heat Flux (W/m²)', width=0.4)
-    ax1.bar(data['Case'], data['Total_Boundary_Heat_Flux'] - data['Radiation_Heat_Flux'], color='darkgrey', label='Total Boundary Heat Flux (W/m²)', bottom=data['Radiation_Heat_Flux'], width=0.4)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
+    ax1.bar(data['Case'], data['Radiation_Heat_Flux'], color='lightcoral', edgecolor='blue', label='Radiation Heat Flux (W/m²)', width=0.35)
+    ax1.bar(data['Case'], data['Total_Boundary_Heat_Flux'] - data['Radiation_Heat_Flux'], color='darkgrey', edgecolor='blue', label='Total Boundary Heat Flux (W/m²)', bottom=data['Radiation_Heat_Flux'], width=0.35)
     ax1.set_ylabel('Heat Flux (W/m²)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -113,8 +113,8 @@ def plot_heat_flux(data):
     return fig
 
 def plot_temperature(data):
-    fig, ax1 = plt.subplots()
-    ax1.bar(data['Case'], data['Flame_Temperature'], color='red', edgecolor='black', label='Flame Temperature (K)', width=0.4)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
+    ax1.bar(data['Case'], data['Flame_Temperature'], color='red', edgecolor='blue', label='Flame Temperature (K)', width=0.35)
     ax1.set_ylabel('Flame Temperature (K)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -139,7 +139,7 @@ For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmai
 
 # Center the image
 st.markdown("<h2 style='text-align: center;'>Sandia ChnA Burner</h2>", unsafe_allow_html=True)
-st.image('burner.jpg', caption='Sandia ChnA Burner', use_column_width=True)
+st.image('burner.jpg', caption='Sandia ChnA Burner')
 
 # Placeholder function for setting font style
 def set_cambria_font():
@@ -153,7 +153,7 @@ def set_cambria_font():
         """, 
         unsafe_allow_html=True
     )
-    
+
 set_cambria_font()
 
 data = []
