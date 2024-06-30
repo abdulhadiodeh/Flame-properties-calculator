@@ -87,7 +87,7 @@ def plot_heat_release(data):
     fig, ax1 = plt.subplots(facecolor='#f0f0f0')
     ax1.bar(data['Case'], data['Heat_Release'], color='purple', edgecolor='blue', label='Heat Release (W)', width=0.35)
     ax1.set_ylabel('Heat Release (W)')
-    ax1.tick_params(axis='x', rotation=45.1)
+    ax1.tick_params(axis='x', rotation=45.05)
     ax1.grid(True, linestyle='--', linewidth=0.5)
     
     ax2 = ax1.twinx()
