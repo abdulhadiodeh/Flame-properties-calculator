@@ -7,13 +7,7 @@ def calculate_combustion_parameters(Flame_Thermal_Output, XH2):
      XCO = 1 - XH2
      
     
-    Total_Boundary_Heat_Flux = (2228.473786 
-                                + 1.0948285385919965e-09 * (Flame_Thermal_Output ** 4)
-                                + 0.002598920294605942 * (Flame_Thermal_Output ** 3)
-                                - 0.0003150675147342936 * (Flame_Thermal_Output ** 2)
-                                + 86.142857142853 * XH2
-                                - 4354.285714285742 * (XH2 ** 2))
-    Heat_Release = (8134.033965 
+   Heat_Release = (8134.033965 
                     + 9.68349751426234e-09 * (Flame_Thermal_Output ** 4)
                     + 0.005923714484535841 * (Flame_Thermal_Output ** 3)
                     - 5.484696052882043e-08 * (Flame_Thermal_Output ** 2)
