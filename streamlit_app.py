@@ -42,7 +42,7 @@ def display_comparison_charts(data):
     df = pd.DataFrame(data, columns=['Case'] + parameters + ['XCO', 'XH2'])
     df.set_index('Case', inplace=True)
 
-    colors = ['blue', 'orange', 'green']
+    colors = ['blue', 'orange', 'green', 'red']
     
     for i, param in enumerate(parameters):
         fig, ax1 = plt.subplots()
@@ -110,4 +110,3 @@ for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Fla
 if len(data) > 0:
     display_comparison_charts(data)
     display_results_table(data)
-
