@@ -11,32 +11,32 @@ def set_cambria_font():
     plt.rcParams['axes.linewidth'] = 2
 
 # Calculation functions
-def calculate_values(XH2, Power):
+def calculate_values(XH2, Flame_Thermal_Output):
     XCO = 1 - XH2
 
-    CO2 = 1286.864286 - 19.936 * Power - 2434.657 * XH2 + 322.986 * (XH2 ** 2)
+    CO2 = 1286.864286 - 19.936 * Flame_Thermal_Output - 2434.657 * XH2 + 322.986 * (XH2 ** 2)
     Total_Boundary_Heat_Flux = (2228.473786 
-                          + 1.0948285385919965e-09 * (Power ** 4)
-                          + 0.002598920294605942 * (Power ** 3)
-                          - 0.0003150675147342936 * (Power ** 2)
+                          + 1.0948285385919965e-09 * (Flame_Thermal_Output ** 4)
+                          + 0.002598920294605942 * (Flame_Thermal_Output ** 3)
+                          - 0.0003150675147342936 * (Flame_Thermal_Output ** 2)
                           + 86.142857142853 * XH2
                           - 4354.285714285742 * (XH2 ** 2))
     Heat_Release = (8134.033965 
-                    + 9.68349751426234e-09 * (Power ** 4)
-                    + 0.005923714484535841 * (Power ** 3)
-                    - 5.484696052882043e-08 * (Power ** 2)
+                    + 9.68349751426234e-09 * (Flame_Thermal_Output ** 4)
+                    + 0.005923714484535841 * (Flame_Thermal_Output ** 3)
+                    - 5.484696052882043e-08 * (Flame_Thermal_Output ** 2)
                     + 939.5081967213116 * XCO
                     + 3154.098360655737 * (XCO ** 2))
     NOx = (157.885714 
-           + 2.3599999999986045 * Power 
+           + 2.3599999999986045 * Flame_Thermal_Output 
            - 284.3428571428405 * XH2 
-           + 12.30769230769231 * (Power * XH2))
+           + 12.30769230769231 * (Flame_Thermal_Output * XH2))
     Flame_Surface_Area = (0.00168 
-                          - 2.3160000000030116e-05 * Power 
+                          - 2.3160000000030116e-05 * Flame_Thermal_Output 
                           + 0.003953142857 * XH2 
                           - 0.003953142857 * (XH2 ** 2))
     Radiation_Heat_Flux = (1042.857143 
-                           + 30.599999999995454 * Power 
+                           + 30.599999999995454 * Flame_Thermal_Output 
                            - 2411.428571428527 * XH2 
                            + 322.9857142857029 * (XH2 ** 2))
     Flame_Temperature = 2160.0 + 152.0 * XH2
@@ -104,7 +104,7 @@ def plot_heat_release(data):
     ax1.grid(True, linestyle='--', linewidth=0.5)
     
     ax2 = ax1.twinx()
-    ax2.plot(data['Case'], data['Power'], color='black', marker='o', linestyle='--', label='Flame Thermal Output (kW)')
+    ax2.plot(data['Case'], data['Flame_Thermal_Output'], color='black', marker='o', linestyle='--', label='Flame Thermal Output (kW)')
     ax2.set_ylabel('Flame Thermal Output (kW)')
     
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
@@ -164,13 +164,13 @@ col1, col2 = st.columns([1, 2])
 
 with col1:
     for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
-        st.header(f'{case_label}')
+        st.header(case_label)
         XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
-        Power = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Power_{i}')
+        Flame_Thermal_Output = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Power_{i}')
         
         if st.button(f'Calculate {case_label}', key=f'button_{i}'):
-            results = calculate_values(XH2, Power)
-            data.append([case_label, *results, Power, XH2])
+            results = calculate_values(XH2, Flame_Thermal_Output)
+            data.append([case_label, *results, Flame_Thermal_Output, XH2])
             st.write(f"CO₂: {results[0]:.2f} kg/m³")
             st.write(f"Total Boundary Heat Flux: {results[1]:.2f} W/m²")
             st.write(f"Heat Release: {results[2]:.2f} W")
@@ -181,7 +181,7 @@ with col1:
 
 with col2:
     if data:
-        df = pd.DataFrame(data, columns=['Case', 'CO2', 'Total_Boundary_Heat_Flux', 'Heat_Release', 'NOx', 'Flame_Surface_Area', 'Radiation_Heat_Flux', 'XCO', 'Flame_Temperature', 'Power', 'XH2'])
+        df = pd.DataFrame(data, columns=['Case', 'CO2', 'Total_Boundary_Heat_Flux', 'Heat_Release', 'NOx', 'Flame_Surface_Area', 'Radiation_Heat_Flux', 'XCO', 'Flame_Temperature', 'Flame_Thermal_Output', 'XH2'])
 
         st.subheader('Comparison Charts')
 
