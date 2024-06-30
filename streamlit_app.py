@@ -6,65 +6,9 @@ import matplotlib.pyplot as plt
 def calculate_combustion_parameters(Flame_Thermal_Output, XH2):
     XCO = 1 - XH2
     
-    CO2 = (
-        48083.30 + 74352.21990073 * Flame_Thermal_Output - 1185046.15095059 * XH2
-        + 3306.55222 * (Flame_Thermal_Output ** 2) - 55440.5787 * (Flame_Thermal_Output * XH2)
-        + 109125 * (XH2 ** 2) + 72124.94 * (Flame_Thermal_Output ** 3)
-        - 16295.85 * (Flame_Thermal_Output ** 2 * XH2) + 45729.92 * (Flame_Thermal_Output * (XH2 ** 2))
-        - 112269.25 * (XH2 ** 3) + 4959.83 * (Flame_Thermal_Output ** 4)
-        - 83160.87 * ((Flame_Thermal_Output ** 3) * XH2) - 44042.30 * ((Flame_Thermal_Output ** 2) * (XH2 ** 2))
-        - 44536.51 * (Flame_Thermal_Output * (XH2 ** 3)) + 218250 * (XH2 ** 4)
-    )
-    
-    Total_Boundary_Heat_Flux = (
-        0 + 1588.44 * Flame_Thermal_Output - 483.70 * XH2
-        + 67.96 * (Flame_Thermal_Output ** 2) - 170.54 * (Flame_Thermal_Output * XH2)
-        + 11.76 * (XH2 ** 2) - 68.11 * (Flame_Thermal_Output ** 3)
-        + 3.20 * ((Flame_Thermal_Output ** 2) * XH2) - 22.04 * (Flame_Thermal_Output * (XH2 ** 2))
-        + 30.63 * (XH2 ** 3) + 6.96 * (Flame_Thermal_Output ** 4)
-        - 12.64 * ((Flame_Thermal_Output ** 3) * XH2) - 11.25 * ((Flame_Thermal_Output ** 2) * (XH2 ** 2))
-        + 7.74 * (Flame_Thermal_Output * (XH2 ** 3)) + 0.07 * (XH2 ** 4)
-    )
-    
-    Heat_Release = (
-        0 + 3305.10 * Flame_Thermal_Output - 791.35 * XH2
-        + 0 * (Flame_Thermal_Output ** 2) + 0 * (Flame_Thermal_Output * XH2)
-        + 0 * (XH2 ** 2) + 270.18 * (Flame_Thermal_Output ** 3)
-        - 5.19 * ((Flame_Thermal_Output ** 2) * XH2) + 0 * (Flame_Thermal_Output * (XH2 ** 2))
-        - 35.22 * (XH2 ** 3) + 0 * (Flame_Thermal_Output ** 4)
-        - 162.42 * ((Flame_Thermal_Output ** 3) * XH2) - 1.74 * ((Flame_Thermal_Output ** 2) * (XH2 ** 2))
-        + 48.32 * (Flame_Thermal_Output * (XH2 ** 3)) - 0.97 * (XH2 ** 4)
-    )
-    
-    NOx = (
-        0.00 + (-2.84579658) * Flame_Thermal_Output + 20.12910846 * XH2
-        + (-1.37452773) * (Flame_Thermal_Output ** 2) + (-7.19582609) * (Flame_Thermal_Output * XH2)
-        + 33.84552102 * (XH2 ** 2)
-    )
-    
-    Flame_Surface_Area = (
-        1.52259958e-5 * Flame_Thermal_Output + 7.09019888e-4 * XH2
-        - 1.66423950e-5 * (Flame_Thermal_Output ** 2) + 2.24465086e-5 * (XH2 ** 2)
-        + 1.46250000e-4 * (Flame_Thermal_Output * XH2) + 2.28389938e-5 * (Flame_Thermal_Output ** 3)
-        - 4.86453016e-5 * (XH2 ** 3) + 4.83081780e-5 * ((Flame_Thermal_Output ** 2) * XH2)
-        + 3.68019521e-4 * (Flame_Thermal_Output * (XH2 ** 2)) - 2.49635925e-5 * (Flame_Thermal_Output ** 4)
-        + 3.36697630e-5 * (XH2 ** 4) + 4.35744642e-6 * ((Flame_Thermal_Output ** 3) * XH2)
-        + 2.44217460e-5 * (Flame_Thermal_Output * (XH2 ** 3)) + 2.92500000e-4
-    )
-    
-    Radiation_Heat_Flux = (
-        0 + 46.41 * Flame_Thermal_Output + 529.73 * XH2
-        - 9.89 * (Flame_Thermal_Output ** 2) + 66.98 * (Flame_Thermal_Output * XH2)
-        + 54.66 * (XH2 ** 2) + 69.62 * (Flame_Thermal_Output ** 3)
-        - 4.59 * ((Flame_Thermal_Output ** 2) * XH2) + 104.23 * (Flame_Thermal_Output * (XH2 ** 2))
-        + 167.90 * (XH2 ** 3) - 14.83 * (Flame_Thermal_Output ** 4)
-        + 100.47 * ((Flame_Thermal_Output ** 3) * XH2) + 7.53 * ((Flame_Thermal_Output ** 2) * (XH2 ** 2))
-        + 1.07 * (Flame_Thermal_Output * (XH2 ** 3)) + 109.33 * (XH2 ** 4)
-    )
-    
     Flame_Temperature = 2160.0 + 152.0 * XH2
     
-    return CO2, Total_Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux, XCO, Flame_Temperature
+    return  Flame_Temperature
 
 # Plot functions with updated styles
 def plot_nox(data):
