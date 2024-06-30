@@ -1,16 +1,21 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
+# Set font and style
 def set_cambria_font():
     plt.rcParams['font.family'] = 'serif'
     plt.rcParams['font.serif'] = 'Cambria Math'
+    plt.rcParams['axes.edgecolor'] = 'black'
+    plt.rcParams['axes.linewidth'] = 2
 
+# Calculation functions
 def calculate_values(XH2, Power):
     XCO = 1 - XH2
 
     CO2 = 1286.864286 - 19.936 * Power - 2434.657 * XH2 + 322.986 * (XH2 ** 2)
-    Boundary_Heat_Flux = (2228.473786 
+    Total_Boundary_Heat_Flux = (2228.473786 
                           + 1.0948285385919965e-09 * (Power ** 4)
                           + 0.002598920294605942 * (Power ** 3)
                           - 0.0003150675147342936 * (Power ** 2)
@@ -34,48 +39,111 @@ def calculate_values(XH2, Power):
                            + 30.599999999995454 * Power 
                            - 2411.428571428527 * XH2 
                            + 322.9857142857029 * (XH2 ** 2))
+    Flame_Temperature = 2160.0 + 152.0 * XH2
 
-    return CO2, Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux, XCO
+    return CO2, Total_Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux, XCO, Flame_Temperature
 
-def display_comparison_charts(data):
-    parameters = ['CO₂ (kg/m³)', 'Boundary Heat Flux (W/m²)', 'Heat Release (W)', 'NOₓ (kg/m³)', 'Flame Surface Area (m²)', 'Radiation Heat Flux (W/m²)']
-    st.write("Debug - Data:", data)  # Debugging line
-    df = pd.DataFrame(data, columns=['Case'] + parameters + ['XCO', 'XH₂'])
-    df.set_index('Case', inplace=True)
-
-    colors = ['blue', 'orange', 'green', 'red']
+# Plot functions
+def plot_nox(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['NOx'], color='red', label='NOx (kg/m³)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('NOx (kg/m³)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
     
-    for i, param in enumerate(parameters):
-        fig, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH2')
+    ax2.set_ylabel('XH2')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
 
-        df[param].plot(kind='bar', ax=ax1, color=colors[i % len(colors)], position=0, width=0.4)
-        ax1.set_title(f'Comparison of {param}')
-        ax1.set_xlabel('Flame Conditions')
-        ax1.set_ylabel(param)
-        ax1.grid(True, linestyle='--', linewidth=0.5)
-        ax1.legend([param], loc='upper center')
+def plot_co2(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['CO2'], color='orange', label='CO2 (kg/m³)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('CO2 (kg/m³)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XCO'], color='black', marker='o', linestyle='--', label='XCO')
+    ax2.set_ylabel('XCO')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
 
-        if param == 'Heat Release (W)' or param == 'CO₂ (kg/m³)':
-            ax2 = ax1.twinx()
-            df['XCO'].plot(ax=ax2, color='red', marker='o', linestyle='dashed')
-            ax2.set_ylabel('XCO')
-            ax2.legend(['XCO'], loc='upper right')
+def plot_flame_surface_area(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Flame_Surface_Area'], color='blue', label='Flame Surface Area (m²)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Flame Surface Area (m²)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH2')
+    ax2.set_ylabel('XH2')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
 
-        if param == 'NOₓ (kg/m³)':
-            ax2 = ax1.twinx()
-            df['XH₂'].plot(ax=ax2, color='purple', marker='o', linestyle='dashed')
-            ax2.set_ylabel('XH₂')
-            ax2.legend(['XH₂'], loc='upper right')
+def plot_heat_release(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Heat_Release'], color='purple', label='Heat Release (W)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Heat Release (W)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['Power'], color='black', marker='o', linestyle='--', label='Flame Thermal Output (kW)')
+    ax2.set_ylabel('Flame Thermal Output (kW)')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
 
-        plt.xticks(rotation=45)
-        plt.tight_layout()
-        st.pyplot(fig)
+def plot_heat_flux(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Total_Boundary_Heat_Flux'], color='darkgrey', label='Total Boundary Heat Flux (W/m²)')
+    ax1.bar(data['Case'], data['Radiation_Heat_Flux'], color='lightcoral', label='Radiation Heat Flux (W/m²)', bottom=data['Total_Boundary_Heat_Flux'])
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Heat Flux (W/m²)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
 
-def display_results_table(data):
-    df = pd.DataFrame(data, columns=['Case', 'CO₂ (kg/m³)', 'Boundary Heat Flux (W/m²)', 'Heat Release (W)', 'NOₓ (kg/m³)', 'Flame Surface Area (m²)', 'Radiation Heat Flux (W/m²)', 'XCO', 'XH₂'])
-    df.set_index('Case', inplace=True)
-    st.table(df)
+def plot_temperature(data):
+    fig, ax1 = plt.subplots()
+    ax1.bar(data['Case'], data['Flame_Temperature'], color='red', edgecolor='black', linestyle='--', label='Flame Temperature (K)')
+    ax1.set_xlabel('Flame Conditions')
+    ax1.set_ylabel('Flame Temperature (K)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH2')
+    ax2.set_ylabel('XH2')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
 
+# Streamlit app layout
 st.title('Combustion Parameter Calculator')
 
 st.write("This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H₂/CO) lean mixture flames with constant stoichiometry (25% excess air), the equations are based on machine learning optimisation and well established CFD numerical models. For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com")
@@ -92,23 +160,9 @@ with col3:
 set_cambria_font()
 
 data = []
-for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
-    st.header(f'{case_label}')
-    XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH₂_{i}')
-    Power = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=1, key=f'Power_{i}')
-    
-    if st.button(f'Calculate {case_label}', key=f'button_{i}'):
-        results = calculate_values(XH2, Power)
-        data.append([case_label, *results])
-        st.write(f"CO₂: {results[0]:.2f} kg/m³")
-        st.write(f"Boundary Heat Flux: {results[1]:.2f} W/m²")
-        st.write(f"Heat Release: {results[2]:.2f} W")
-        st.write(f"NOₓ: {results[3]:.2f} kg/m³")
-        st.write(f"Flame Surface Area: {results[4]:.6f} m²")
-        st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m²")
-        st.write(f"XCO: {results[6]:.2f}")
+col1, col2 = st.columns(2)
 
-if len(data) > 0:
-    display_comparison_charts(data)
-    display_results_table(data)
+with col1:
+    for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
+        st.header(f'{
 
