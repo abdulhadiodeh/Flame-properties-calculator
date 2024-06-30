@@ -2,6 +2,11 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Custom function to set Cambria Math font
+def set_cambria_font():
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams['font.serif'] = 'Cambria Math'
+
 def calculate_values(XH2, Power):
     XCO = 1 - XH2
 
@@ -31,40 +36,65 @@ def calculate_values(XH2, Power):
                            - 2411.428571428527 * XH2 
                            + 322.9857142857029 * (XH2 ** 2))
 
-    return CO2, Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux
+    return CO2, Boundary_Heat_Flux, Heat_Release, NOx, Flame_Surface_Area, Radiation_Heat_Flux, XCO
 
-def display_comparison_chart(data):
+def display_comparison_charts(data):
     parameters = ['CO2 (kg/m^3)', 'Boundary Heat Flux (W/m^2)', 'Heat Release (W)', 'NOx (kg/m^3)', 'Flame Surface Area (m^2)', 'Radiation Heat Flux (W/m^2)']
-    df = pd.DataFrame(data, columns=['Case'] + parameters)
+    df = pd.DataFrame(data, columns=['Case'] + parameters + ['XCO', 'XH2'])
     df.set_index('Case', inplace=True)
+
+    colors = ['blue', 'orange', 'green']
     
-    fig, axs = plt.subplots(3, 2, figsize=(15, 15))
-    axs = axs.flatten()
-    
-    for ax, param in zip(axs, parameters):
-        df[param].plot(kind='bar', ax=ax)
-        ax.set_title(f'Comparison of {param}')
-        ax.set_xlabel('Case')
-        ax.set_ylabel(param)
-        ax.grid(True, linestyle='--', linewidth=0.5)
-        ax.legend(loc='upper center')
-        ax.set_xticklabels(df.index, rotation=0)
-    
-    plt.tight_layout()
-    st.pyplot(fig)
+    for i, param in enumerate(parameters):
+        fig, ax1 = plt.subplots()
+
+        df[param].plot(kind='bar', ax=ax1, color=colors[i % len(colors)], position=0, width=0.4)
+        ax1.set_title(f'Comparison of {param}')
+        ax1.set_xlabel('Case')
+        ax1.set_ylabel(param)
+        ax1.grid(True, linestyle='--', linewidth=0.5)
+        ax1.legend([param], loc='upper center')
+
+        if param in ['Heat Release (W)', 'CO2 (kg/m^3)']:
+            ax2 = ax1.twinx()
+            df['XCO'].plot(ax=ax2, color='red', marker='o', linestyle='dashed')
+            ax2.set_ylabel('XCO')
+            ax2.legend(['XCO'], loc='upper right')
+
+        if param == 'NOx (kg/m^3)':
+            ax2 = ax1.twinx()
+            df['XH2'].plot(ax=ax2, color='purple', marker='o', linestyle='dashed')
+            ax2.set_ylabel('XH2')
+            ax2.legend(['XH2'], loc='upper right')
+
+        plt.tight_layout()
+        st.pyplot(fig)
+
+def display_results_table(data):
+    df = pd.DataFrame(data, columns=['Case', 'CO2 (kg/m^3)', 'Boundary Heat Flux (W/m^2)', 'Heat Release (W)', 'NOx (kg/m^3)', 'Flame Surface Area (m^2)', 'Radiation Heat Flux (W/m^2)', 'XCO', 'XH2'])
+    df.set_index('Case', inplace=True)
+    st.table(df)
 
 st.title('Combustion Parameter Calculator')
 
-st.write("This is a calculator based on Sandia chnA burner for turbulent diffusion ideal gas (H2/CO) lean mixture flames with constant stoichiometry (25% excess air).")
+st.write("This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H2/CO) lean mixture flames with constant stoichiometry (25% excess air), the equations are based on machine learning optimisation and well established CFD numerical models. For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com")
 
-# Add an image to the app
-st.image('burner.jpg', caption='Sandia chnA Burner')
+# Center the image
+col1, col2, col3 = st.columns([1, 3, 1])
+with col1:
+    st.write("")
+with col2:
+    st.image('burner.jpg', caption='Sandia chnA Burner')
+with col3:
+    st.write("")
+
+set_cambria_font()
 
 data = []
 for i in range(1, 4):
     st.header(f'Case {i}')
-    XH2 = st.number_input(f'Enter XH2 for Case {i} (0.25 to 1):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
-    Power = st.number_input(f'Enter Power for Case {i} (15 to 25):', min_value=15, max_value=25, step=1, key=f'Power_{i}')
+    XH2 = st.number_input(f'Enter H2 volume percentage (XH2) for Case {i} (0.25 to 1):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
+    Power = st.number_input(f'Enter Flame Thermal Output (kW) for Case {i} (15 to 25):', min_value=15, max_value=25, step=1, key=f'Power_{i}')
     
     if st.button(f'Calculate Case {i}', key=f'button_{i}'):
         results = calculate_values(XH2, Power)
@@ -75,6 +105,8 @@ for i in range(1, 4):
         st.write(f"NOx: {results[3]:.2f} kg/m^3")
         st.write(f"Flame Surface Area: {results[4]:.6f} m^2")
         st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m^2")
+        st.write(f"XCO: {results[6]:.2f}")
 
 if len(data) > 0:
-    display_comparison_chart(data)
+    display_comparison_charts(data)
+    display_results_table(data)
