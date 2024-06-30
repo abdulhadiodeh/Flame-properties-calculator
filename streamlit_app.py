@@ -53,8 +53,8 @@ def plot_nox(data):
     ax1.grid(True, linestyle='--', linewidth=0.5)
     
     ax2 = ax1.twinx()
-    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH2')
-    ax2.set_ylabel('XH2')
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH₂')
+    ax2.set_ylabel('XH₂')
     
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
     fig.tight_layout()
@@ -63,9 +63,9 @@ def plot_nox(data):
 
 def plot_co2(data):
     fig, ax1 = plt.subplots()
-    ax1.bar(data['Case'], data['CO2'], color='orange', label='CO2 (kg/m³)')
+    ax1.bar(data['Case'], data['CO2'], color='orange', label='CO₂ (kg/m³)')
     ax1.set_xlabel('Flame Conditions')
-    ax1.set_ylabel('CO2 (kg/m³)')
+    ax1.set_ylabel('CO₂ (kg/m³)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
     
@@ -87,8 +87,8 @@ def plot_flame_surface_area(data):
     ax1.grid(True, linestyle='--', linewidth=0.5)
     
     ax2 = ax1.twinx()
-    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH2')
-    ax2.set_ylabel('XH2')
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH₂')
+    ax2.set_ylabel('XH₂')
     
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
     fig.tight_layout()
@@ -135,8 +135,8 @@ def plot_temperature(data):
     ax1.grid(True, linestyle='--', linewidth=0.5)
     
     ax2 = ax1.twinx()
-    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH2')
-    ax2.set_ylabel('XH2')
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH₂')
+    ax2.set_ylabel('XH₂')
     
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
     fig.tight_layout()
@@ -165,7 +165,7 @@ col1, col2 = st.columns([1, 2])
 with col1:
     for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
         st.header(f'{case_label}')
-                        XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
+                XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
         Power = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=0.1, key=f'Power_{i}')
         
         if st.button(f'Calculate {case_label}', key=f'button_{i}'):
@@ -191,3 +191,4 @@ with col2:
         st.pyplot(plot_heat_release(df))
         st.pyplot(plot_heat_flux(df))
         st.pyplot(plot_temperature(df))
+
