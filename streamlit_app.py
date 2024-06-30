@@ -49,7 +49,7 @@ def display_comparison_charts(data):
 
         df[param].plot(kind='bar', ax=ax1, color=colors[i % len(colors)], position=0, width=0.4)
         ax1.set_title(f'Comparison of {param}')
-        ax1.set_xlabel('Case')
+        ax1.set_xlabel('Flame Conditions')
         ax1.set_ylabel(param)
         ax1.grid(True, linestyle='--', linewidth=0.5)
         ax1.legend([param], loc='upper center')
@@ -66,6 +66,7 @@ def display_comparison_charts(data):
             ax2.set_ylabel('XH2')
             ax2.legend(['XH2'], loc='upper right')
 
+        plt.xticks(rotation=45)
         plt.tight_layout()
         st.pyplot(fig)
 
@@ -78,4 +79,35 @@ st.title('Combustion Parameter Calculator')
 
 st.write("This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H2/CO) lean mixture flames with constant stoichiometry (25% excess air), the equations are based on machine learning optimisation and well established CFD numerical models. For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com")
 
-# Center the
+# Center the image
+col1, col2, col3 = st.columns([1, 3, 1])
+with col1:
+    st.write("")
+with col2:
+    st.image('burner.jpg', caption='Sandia chnA Burner')
+with col3:
+    st.write("")
+
+set_cambria_font()
+
+data = []
+for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
+    st.header(f'{case_label}')
+    XH2 = st.number_input(f'Enter H2 volume percentage (XH2) for {case_label} (0.25 to 1):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
+    Power = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15, max_value=25, step=1, key=f'Power_{i}')
+    
+    if st.button(f'Calculate {case_label}', key=f'button_{i}'):
+        results = calculate_values(XH2, Power)
+        data.append([case_label, *results])
+        st.write(f"CO2: {results[0]:.2f} kg/m³")
+        st.write(f"Boundary Heat Flux: {results[1]:.2f} W/m²")
+        st.write(f"Heat Release: {results[2]:.2f} W")
+        st.write(f"NO?: {results[3]:.2f} kg/m³")
+        st.write(f"Flame Surface Area: {results[4]:.6f} m²")
+        st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m²")
+        st.write(f"XCO: {results[6]:.2f}")
+
+if len(data) > 0:
+    display_comparison_charts(data)
+    display_results_table(data)
+
