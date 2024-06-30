@@ -160,9 +160,9 @@ with col3:
 set_cambria_font()
 
 data = []
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([1, 2])
 
 with col1:
     for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
-        st.header(f'{
-
+        st.header(f'{case_label}')
+        XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case
