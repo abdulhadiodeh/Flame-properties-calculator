@@ -143,6 +143,7 @@ def plot_temperature(data):
     
     return fig
 
+
 # Streamlit app layout
 st.title('Combustion Parameter Calculator')
 
