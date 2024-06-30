@@ -157,7 +157,7 @@ st.title('Combustion Parameter Calculator')
 st.write("""
 This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H₂/CO) lean mixture flames with constant stoichiometry (25% excess air), 
 the equations are based on machine learning optimisation and well established CFD numerical models. 
-For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com
+For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com. The developer would like to thank his fiancee Farah for her support throughtout designing this tool,her encouragement made it possible!.
 """)
 
 # Center the image
@@ -192,10 +192,10 @@ for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Fla
         
         results = calculate_combustion_parameters(Flame_Thermal_Output, XH2)
         data.append([case_label, *results, Flame_Thermal_Output, XH2])
-        st.write(f"CO₂: {results[0]:.2f} kg/m³")
+        st.write(f"CO₂: {results[0]:.2f} kg/m³/s")
         st.write(f"Total Boundary Heat Flux: {results[1]:.2f} W/m²")
         st.write(f"Heat Release: {results[2]:.2f} W")
-        st.write(f"NOₓ: {results[3]:.2f} kg/m³")
+        st.write(f"NOₓ: {results[3]:.2f} kg/m³/s")
         st.write(f"Flame Surface Area: {results[4]:.6f} m²")
         st.write(f"Radiation Heat Flux: {results[5]:.2f} W/m²")
         st.write(f"Flame Temperature: {results[7]:.2f} K")
