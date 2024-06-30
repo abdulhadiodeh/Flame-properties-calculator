@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from PIL import Image
 
 # Function to calculate values based on provided equations
 def calculate_combustion_parameters(Flame_Thermal_Output, XH2):
@@ -58,8 +59,8 @@ def calculate_combustion_parameters(Flame_Thermal_Output, XH2):
 
 # Plot functions with updated styles
 def plot_nox(data):
-    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
-    ax1.bar(data['Case'], data['NOx'], color='red', edgecolor='blue', label='NOx (kg/m³)', width=0.35)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0', edgecolor='black', linewidth=2)
+    ax1.bar(data['Case'], data['NOx'], color='red', edgecolor='black', label='NOx (kg/m³)', width=0.35)
     ax1.set_ylabel('NOx (kg/m³)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -74,8 +75,8 @@ def plot_nox(data):
     return fig
 
 def plot_co2(data):
-    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
-    ax1.bar(data['Case'], data['CO2'], color='orange', edgecolor='blue', label='CO₂ (kg/m³)', width=0.35)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0', edgecolor='black', linewidth=2)
+    ax1.bar(data['Case'], data['CO2'], color='orange', edgecolor='black', label='CO₂ (kg/m³)', width=0.35)
     ax1.set_ylabel('CO₂ (kg/m³)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -90,8 +91,8 @@ def plot_co2(data):
     return fig
 
 def plot_flame_surface_area(data):
-    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
-    ax1.bar(data['Case'], data['Flame_Surface_Area'], color='blue', edgecolor='blue', label='Flame Surface Area (m²)', width=0.35)
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0', edgecolor='black', linewidth=2)
+    ax1.bar(data['Case'], data['Flame_Surface_Area'], color='blue', edgecolor='black', label='Flame Surface Area (m²)', width=0.35)
     ax1.set_ylabel('Flame Surface Area (m²)')
     ax1.tick_params(axis='x', rotation=45)
     ax1.grid(True, linestyle='--', linewidth=0.5)
@@ -106,9 +107,87 @@ def plot_flame_surface_area(data):
     return fig
 
 def plot_heat_release(data):
-    fig, ax1 = plt.subplots(facecolor='#f0f0f0')
-    ax1.bar(data['Case'], data['Heat_Release'], color='purple', edgecolor='blue', label='Heat Release (W)', width
-=0.01, key=f'XH2_{i}')
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0', edgecolor='black', linewidth=2)
+    ax1.bar(data['Case'], data['Heat_Release'], color='purple', edgecolor='black', label='Heat Release (W)', width=0.35)
+    ax1.set_ylabel('Heat Release (W)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['Flame_Thermal_Output'], color='black', marker='o', linestyle='--', label='Flame Thermal Output (kW)')
+    ax2.set_ylabel('Flame Thermal Output (kW)')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
+
+def plot_heat_flux(data):
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0', edgecolor='black', linewidth=2)
+    ax1.bar(data['Case'], data['Radiation_Heat_Flux'], color='lightcoral', edgecolor='black', label='Radiation Heat Flux (W/m²)', width=0.35)
+    ax1.bar(data['Case'], data['Total_Boundary_Heat_Flux'] - data['Radiation_Heat_Flux'], color='darkgrey', edgecolor='black', label='Total Boundary Heat Flux (W/m²)', bottom=data['Radiation_Heat_Flux'], width=0.35)
+    ax1.set_ylabel('Heat Flux (W/m²)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
+
+def plot_temperature(data):
+    fig, ax1 = plt.subplots(facecolor='#f0f0f0', edgecolor='black', linewidth=2)
+    ax1.bar(data['Case'], data['Flame_Temperature'], color='red', edgecolor='black', label='Flame Temperature (K)', width=0.35)
+    ax1.set_ylabel('Flame Temperature (K)')
+    ax1.tick_params(axis='x', rotation=45)
+    ax1.grid(True, linestyle='--', linewidth=0.5)
+    
+    ax2 = ax1.twinx()
+    ax2.plot(data['Case'], data['XH2'], color='black', marker='o', linestyle='--', label='XH₂')
+    ax2.set_ylabel('XH₂')
+    
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1), ncol=2, frameon=True, edgecolor='black')
+    fig.tight_layout()
+    
+    return fig
+
+# Streamlit app layout
+st.title('Combustion Parameter Calculator')
+
+st.write("""
+This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H₂/CO) lean mixture flames with constant stoichiometry (25% excess air), 
+the equations are based on machine learning optimisation and well established CFD numerical models. 
+For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com
+""")
+
+# Center the image
+st.markdown("<h2 style='text-align: center;'>Sandia ChnA Burner</h2>", unsafe_allow_html=True)
+image = Image.open('burner.jpg')
+rotated_image = image.rotate(-90, expand=True)
+st.image(rotated_image, caption='Sandia ChnA Burner')
+
+# Placeholder function for setting font style
+def set_cambria_font():
+    st.markdown(
+        """
+        <style>
+        .streamlit-container {
+            font-family: 'Cambria', serif;
+        }
+        </style>
+        """, 
+        unsafe_allow_html=True
+    )
+
+set_cambria_font()
+
+data = []
+st.header('Flame Conditions Input')
+for i, case_label in enumerate(['Flame conditions A', 'Flame conditions B', 'Flame conditions C'], start=1):
+    col1, col2, col3 = st.columns([1, 3, 1])
+    with col2:
+        st.subheader(case_label)
+        XH2 = st.number_input(f'Enter H₂ volume percentage (XH₂) for {case_label} (0.25 to 1.0):', min_value=0.25, max_value=1.0, step=0.01, key=f'XH2_{i}')
         Flame_Thermal_Output = st.number_input(f'Enter Flame Thermal Output (kW) for {case_label} (15 to 25):', min_value=15.0, max_value=25.0, step=0.1, key=f'Flame_Thermal_Output_{i}')
         
         results = calculate_combustion_parameters(Flame_Thermal_Output, XH2)
@@ -142,4 +221,3 @@ if data:
     st.markdown("---")  # Horizontal line
 
     st.pyplot(plot_temperature(df))
-
