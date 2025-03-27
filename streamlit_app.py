@@ -156,7 +156,7 @@ st.title('Combustion Parameter Calculator')
 
 st.write("""
 This is a calculator tool for educational purposes based on Sandia ChnA burner for turbulent diffusion ideal gas (H₂/CO) lean mixture flames with constant stoichiometry (25% excess air), 
-the equations are based on machine learning optimisation and well established CFD numerical models. 
+the equations are based on machine learning optimisation and well-established CFD numerical models. 
 For any enquiries about this calculation tool, kindly contact abdulhadiodeh@gmail.com.
 """)
 
